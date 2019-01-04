@@ -1,0 +1,594 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Проходная</title>
+    <link rel="stylesheet" type="text/css" href="styleMain.css"/>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Select2 JQuery Plugin">
+    <meta name="author" content="Igor Vaynberg">
+
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="prettify/prettify.css" rel="stylesheet"/>
+    
+ 
+
+
+    <!--[if lt IE 9]>
+      <script src="js/html5shim.js"></script>
+    <![endif]-->
+
+      
+      <script src="js/jquery-1.7.1.min.js"></script>
+      <script src="js/jquery-ui-1.8.20.custom.min.js"></script> <!-- for sortable example -->
+      <script src="js/jquery.mousewheel.js"></script>
+      <script src="prettify/prettify.min.js"></script>
+      <script src="bootstrap/js/bootstrap.min.js"></script>
+</head>
+
+   <link href="select2-3.5.3/select2.css?ts=2015-08-29T20%3A09%3A48%2B00%3A00" rel="stylesheet"/>
+<script src="select2-3.5.3/select2.js?ts=2015-08-29T20%3A09%3A48%2B00%3A00"></script>
+
+
+<script type="text/javascript">
+    	/*$(document).ready(function() { 
+        	
+    		getLastName();
+    		getDepar();
+    		
+        	$("#username").select2({ placeholder: "Фамилия", allowClear: true });
+        	
+        	$("#depart").select2({ placeholder: "Отдел", allowClear: true });
+        	
+        	$("#surnMes").select2({ placeholder: "Фамилия", allowClear: true });
+    		
+        	function getLastName(){
+    			var params = 'info=' + 'getFIO';
+    			var request = new XMLHttpRequest();
+    			
+    			request.onreadystatechange = function(){
+    					if(request.readyState == 4 && request.status ==200){
+    						
+    						document.querySelector('#username').innerHTML = request.responseText;
+    						document.querySelector('#surnMes').innerHTML = request.responseText;
+    						request
+    					}
+    			}
+    			
+    			request.open('POST', 'SurnameFinder');
+    			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    			request.send(params);
+    		}
+    		
+    		function getDepar(){
+    			var params = 'info=' + 'getDepar';
+    			var request = new XMLHttpRequest();
+    			
+    			request.onreadystatechange = function(){
+    					if(request.readyState == 4 && request.status ==200){
+    						document.querySelector('#depart').innerHTML = request.responseText;
+    					}
+    			}
+    			
+    			request.open('POST', 'SurnameFinder');
+    			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    			request.send(params);
+    		}
+         	     	        	
+        	
+        });*/
+    	
+</script>
+
+<script type="text/javascript">
+function getLastName(params){
+	//var params = 'info=' + 'getLastName';
+	var request = new XMLHttpRequest();
+	var texts = 0;
+	//console.log(1);
+	
+	request.open('POST', 'SurnameFinder',false);
+	request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	request.send(params);
+	//console.log(3);
+	return request;
+ }
+	 
+	 
+ function getRequest(request){
+	 var id = 0;
+	 while(request.readyState != 4 ){ 
+		 console.log(request.readyState);
+		 id++;
+		 if (id>100){
+			 break;
+		 }
+	 }
+	 //console.log(request.responseText);
+	 return request.responseText ;
+/*		request.onreadystatechange = function(){
+			console.log(4);
+				/*if((request.readyState == 4) && (request.status ==200)){
+					texts = request.responseText;
+					console.log(5);
+				}
+				if (texts != 0 ){
+					console.log(texts);
+					return texts;
+				}
+				console.log(6);
+		}
+	 
+	/*if (texts != 0 ){
+	console.log(texts);
+	return texts;
+}*/
+	
+
+}
+
+</script>
+
+<script id="statusScr">	
+$(document).ready(function() {
+	var params = 'info=' + 'getStatus';
+	var text = [];
+	var requests = getLastName(params);
+	
+	text = getRequest(requests).split(',');
+	var id = 0;
+	
+	var object ={};
+	var array =[];
+	
+	for(var i = 0; i< text.length; i++){
+	 object = {
+				id: text[i],
+				text: text[i]
+		}
+		array.push(object);
+	}
+	
+	var kol = 0;
+	$(document).ready(function() {
+		$("#status").select2({
+		   
+		    placeholder: "Статус",
+			  allowClear: true,
+			  
+		    query: function (query) {
+		    	 var data = {results: []}, i, j, s;
+		            data.results.push({id: query.term, text: query.term,});
+		            kol = query.term;
+		            var s = 0;
+		           // console.log(data);
+		            for(var j = 0; j< array.length; j++){
+		            	if (query.term.toLowerCase() == array[j].text.substring(0, kol.length).toLowerCase() ){
+		            		var temp = array[s];
+		            		array[s] = array[j];
+		            		array[j] = temp;
+		            		s++;
+		            	}
+		            }
+		            
+		            for(var j = 0; j< array.length; j++){	            	
+		            	data.results.push(array[j]);
+		            }
+		                  
+		        query.callback(data);
+		        
+		    }
+	
+		});
+		
+		/*$('#sound').on('change', function (e) {
+			alert("Selected value is: "+$("#sound").select2("data").text);
+	
+			});*/
+	
+		});
+	
+	/*$('#userSurname').on('change', function (e) {
+		alert("Selected value is: "+$("#e5").select2("val"));
+	
+		});*/
+	});
+</script>	
+
+<script id="usernameScr">	
+$(document).ready(function() {
+	var params = 'info=' + 'getFIO';
+	var text = [];
+	var requests = getLastName(params);
+	
+	text = getRequest(requests).split(',');
+	
+	var id = 0;
+	
+	var object ={};
+	var array =[];
+	
+	for(var i = 0; i< text.length; i++){
+	 object = {
+				id: text[i],
+				text: text[i]
+		}
+		array.push(object);
+	}
+	
+	var kol = 0;
+	$(document).ready(function() {
+		$("#username").select2({
+		   
+		    placeholder: "Фамилия",
+			  allowClear: true,
+			  
+		    query: function (query) {
+		    	 var data = {results: []}, i, j, s;
+		            data.results.push({id: query.term, text: query.term,});
+		            kol = query.term;
+		            var s = 0;
+		            //console.log(data);
+		            for(var j = 0; j< array.length; j++){
+		            	if (query.term.toLowerCase() == array[j].text.substring(0, kol.length).toLowerCase() ){
+		            		var temp = array[s];
+		            		array[s] = array[j];
+		            		array[j] = temp;
+		            		s++;
+		            	}
+		            }
+		            
+		            for(var j = 0; j< array.length; j++){	            	
+		            	data.results.push(array[j]);
+		            }
+		                  
+		        query.callback(data);
+		        
+		    }
+	
+		});
+		
+		/*$('#sound').on('change', function (e) {
+			alert("Selected value is: "+$("#sound").select2("data").text);
+	
+			});*/
+	
+		});
+	
+	/*$('#userSurname').on('change', function (e) {
+		alert("Selected value is: "+$("#e5").select2("val"));
+	
+		});*/
+	
+});
+
+</script>	
+
+<script id="departScr">	
+$(document).ready(function() {
+	var params = 'info=' + 'getDepar';
+	var text = [];
+	var requests = getLastName(params);
+	
+	text = getRequest(requests).split(',');
+	var id = 0;
+	
+	var object ={};
+	var array =[];
+	
+	for(var i = 0; i< text.length; i++){
+	 object = {
+				id: text[i],
+				text: text[i]
+		}
+		array.push(object);
+	}
+	
+	var kol = 0;
+	$(document).ready(function() {
+		$("#depart").select2({
+		   
+		    placeholder: "Отдел",
+			  allowClear: true,
+			  
+		    query: function (query) {
+		    	 var data = {results: []}, i, j, s;
+		            data.results.push({id: query.term, text: query.term,});
+		            kol = query.term;
+		            var s = 0;
+		           // console.log(data);
+		            for(var j = 0; j< array.length; j++){
+		            	if (query.term.toLowerCase() == array[j].text.substring(0, kol.length).toLowerCase() ){
+		            		var temp = array[s];
+		            		array[s] = array[j];
+		            		array[j] = temp;
+		            		s++;
+		            	}
+		            }
+		            
+		            for(var j = 0; j< array.length; j++){	            	
+		            	data.results.push(array[j]);
+		            }
+		                  
+		        query.callback(data);
+		        
+		    }
+	
+		});
+		
+		/*$('#sound').on('change', function (e) {
+			alert("Selected value is: "+$("#sound").select2("data").text);
+	
+			});*/
+	
+		});
+	
+	/*$('#userSurname').on('change', function (e) {
+		alert("Selected value is: "+$("#e5").select2("val"));
+	
+		});*/
+	});
+</script>
+
+<script id="surnMesScr">	
+$(document).ready(function() {
+	var params = 'info=' + 'getFIO';
+	var text = [];
+	var requests = getLastName(params);
+	
+	text = getRequest(requests).split(',');
+	
+	var id = 0;
+	
+	var object ={};
+	var array =[];
+	
+	for(var i = 0; i< text.length; i++){
+	 object = {
+				id: text[i],
+				text: text[i]
+		}
+		array.push(object);
+	}
+	
+	var kol = 0;
+	$(document).ready(function() {
+		$("#surnMes").select2({
+		   
+		    placeholder: "Фамилия",
+			  allowClear: true,
+			  
+		    query: function (query) {
+		    	 var data = {results: []}, i, j, s;
+		            data.results.push({id: query.term, text: query.term,});
+		            kol = query.term;
+		            var s = 0;
+		            //console.log(data);
+		            for(var j = 0; j< array.length; j++){
+		            	if (query.term.toLowerCase() == array[j].text.substring(0, kol.length).toLowerCase() ){
+		            		var temp = array[s];
+		            		array[s] = array[j];
+		            		array[j] = temp;
+		            		s++;
+		            	}
+		            }
+		            
+		            for(var j = 0; j< array.length; j++){	            	
+		            	data.results.push(array[j]);
+		            }
+		                  
+		        query.callback(data);
+		        
+		    }
+	
+		});
+		
+		/*$('#sound').on('change', function (e) {
+			alert("Selected value is: "+$("#sound").select2("data").text);
+	
+			});*/
+	
+		});
+	
+	/*$('#userSurname').on('change', function (e) {
+		alert("Selected value is: "+$("#e5").select2("val"));
+	
+		});*/
+	
+});
+
+</script>
+
+<script id= "typeMesScr">
+$(document).ready(function() {
+	/*var params = 'info=' + 'getFIO';
+	var text = [];
+	var requests = getLastName(params);
+	
+	text = getRequest(requests).split(',');
+	
+	var id = 0;
+	
+	var object ={};
+	var array =[];
+	
+	var ids
+	
+	for(var i = 0; i< text.length; i++){
+	 object = {
+				id: text[i],
+				text: text[i]
+		}
+		array.push(object);
+	}
+	*/
+	/*var kol = 0;
+	$(document).ready(function() {
+		$("#typeMess").select2({
+		   
+		    placeholder: "Сообщение",
+			  allowClear: true,
+			  
+		    query: function (query) {
+		    	 var data = {results: []}, i, j, s;
+		            data.results.push({id: query.term, text: query.term,});
+		            kol = query.term;
+		            var s = 0;
+		            //console.log(data);
+		            for(var j = 0; j< array.length; j++){
+		            	if (query.term.toLowerCase() == array[j].text.substring(0, kol.length).toLowerCase() ){
+		            		var temp = array[s];
+		            		array[s] = array[j];
+		            		array[j] = temp;
+		            		s++;
+		            	}
+		            }
+		            
+		            for(var j = 0; j< array.length; j++){	            	
+		            	data.results.push(array[j]);
+		            }
+		                  
+		        query.callback(data);
+		        
+		    }
+	
+		});
+		
+		/*$('#sound').on('change', function (e) {
+			alert("Selected value is: "+$("#sound").select2("data").text);
+	
+			});*/
+	
+		//});
+	
+	/*$('#userSurname').on('change', function (e) {
+		alert("Selected value is: "+$("#e5").select2("val"));
+	
+		});*/
+	
+//});
+
+	
+});
+
+</script>
+
+<body>
+
+	<form >
+	<div class ="titles">		
+		<font size="5" color="black" face="Arial">Информация о посещении</font>
+		 </div>   
+    			<div  class = "dateBeg">
+					Дата начала:
+				</div>
+				<div  class = "dateBegINP">
+					<br><input type = "date" name = "calendarStart"><br>
+				</div>	
+				
+				<div class = "dateFin">
+					Дата окончания:
+				</div>
+				<div class = "dateFinINP">
+					<input type = "date" name = "calendarFin">
+				</div>
+    
+				<div class = "username">
+					Введите фамилию работника:
+					</div>
+					
+					<!--   <div class = "usernameINP">
+    					<select  id="username" size="5" style="width:230px">  </select>
+  					</div>
+  					-->
+  					<div class = "usernameINP" >
+						<input type="hidden" id="username" style="width:230px"/>
+					</div>
+  					
+  									
+				
+				<div class = "status" >
+					Введите статус: 
+				</div>
+				
+					<!-- <div class = "statusINP">
+    					<select  id="status" size="5"  multiple="multiple">  </select>
+  					</div>-->
+  					 <div class = "statusINP" >
+						<input type="hidden" id="status" style="width:230px"/>
+					</div>
+  					
+							
+				<div class = "depart" >
+					Введите отдел: 
+					</div>
+					
+				<!-- 	<div class = "departINP">
+    					<select  id="depart" size="5" style="width:230px" >  </select>
+  					</div>
+  					 -->
+  					<div class = "departINP" >
+						<input type="hidden" id="depart" style="width:230px"/>
+					</div>
+				
+						
+				<div class =" but">
+					<input  type="button"  id= "but" value="Отправить" /> 
+				</div>
+				
+		<div class ="message">		
+			<font size="5" color="black" face="Arial">Оставить сообщение для работника </font>
+		</div>
+		
+			<div class = "surnMes" >
+				Введите фамилию: 
+			</div>
+				<!-- <div class = "surnMesINP">
+    				<select  id="surnMes" size="5" style="width:230px" >  </select>
+  				</div>
+  				-->
+  				<div class = "surnMesINP" >
+						<input type="hidden" id="surnMes" style="width:230px"/>
+					</div>
+						
+			<div class = "typeMes" >
+				Выберете сообщение: 
+			</div>
+			   <div class = "typeMesINP">
+			   		<select   id="typeMes" style="width:230px" >
+    					<!-- <option disabled selected>Выберите сообщение</option> -->
+    					<option value="accountant">Зайди в бухгалтерию</option>
+    					<option value="director">Зайди к директору</option>
+    					<option value="chiefEngineer">Зайди к главному инженеру</option>
+    					<option value="hrDepartment">Зайди в отдел кадров</option>
+   					</select>
+   				</div>
+   				
+   			<div class = "typeCom" >
+				Выберете способ оповещения: 
+			</div>
+			   <div class = "typeComINP">
+			   		<select size="1"  id="typeCom">
+    					<option disabled selected>Выберите способ оповещения</option>
+    					<option value="вход">При входе</option>
+    					<option value="выход/вход">При выходе и входе</option>
+   					</select>
+   				</div>
+   				
+   				
+ 		<div class ="sendMesBut">
+			<input  type="button"  id= "sendMesBut" value="Отправить" /> 
+		</div>
+		    
+	
+	
+	
+	<div class = "table" id = "result"></div>
+	<div class = "confirm" id = "confirm"></div>
+	<script src="ajax.js"></script>
+</form>
+
+</body>
+</html>
+

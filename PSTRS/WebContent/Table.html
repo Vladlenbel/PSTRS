@@ -1,0 +1,273 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Select2 JQuery Plugin">
+<title>Проходная</title>
+    <link rel="stylesheet" type="text/css" href="styleMain.css"/>
+    
+    <script type="text/javascript" src="jquery.js"></script>
+    <link href="select2.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="styleMain.css"/>
+    
+    
+    
+     
+      <script src="json2.js"></script>
+      <script src="jquery-1.7.1.min.js"></script>
+      <script src="jquery-ui-1.8.20.custom.min.js"></script> <!-- for sortable example -->
+      <script src="jquery.mousewheel.js"></script>
+      <script src="prettify.min.js"></script>
+      <script src="bootstrap.min.js"></script>
+      
+      <link  rel="stylesheet" type="text/css" href="select2.css"/>
+		<script src="select2.full.js"></script>
+		
+		 <link  rel="stylesheet" type="text/css" href="bootstrap.css"/>
+    <link rel="stylesheet" type="text/css"  href="prettify.css" />
+   
+
+      
+      
+    <script id="script_e5">
+$(document).ready(function() {
+$("#e5").select2({
+	
+    minimumInputLength: 1,
+    query: function (query) {
+        var data = {results: []}, i, j, s;
+        for (i = 1; i < 5; i++) {
+            s = "";
+            for (j = 0; j < i; j++) {s = s + query.term;}
+            data.results.push({id: query.term + i, text: s});
+        }
+        query.callback(data);
+    }
+});
+});
+</script>
+
+    <style>
+   select {
+    width: 200px; /* Ширина списка в пикселах */
+   }
+      input {
+    width: 200px; /* Ширина списка в пикселах */
+   }
+  </style>
+     <style>
+
+   </style>
+</head>
+
+    <script type="text/javascript">
+    	$(document).ready(function() { 
+        	
+    		getLastName();
+    		getDepar();
+    		
+        	$("#username").select2({ placeholder: "Фамилия", allowClear: true });
+        	$("#status").select2({ placeholder: "Статус", allowClear: true });
+        	$("#depart").select2({ placeholder: "Отдел", allowClear: true });
+        	
+        	$("#surnMes").select2({ placeholder: "Фамилия", allowClear: true });
+    		
+        	
+        	
+        	$("#supsell").select2({
+        	    placeholder: "Select1",
+        	    	allowClear: true
+        	});
+        	
+        	$("#supsel").select2({
+        	    minimumInputLength: 1,
+        	    query: function (query) {
+        	        var data = {results: []}, i, j, s;
+        	        for (i = 1; i < 5; i++) {
+        	            s = "";
+        	            for (j = 0; j < i; j++) {s = s + query.term;}
+        	            data.results.push({id: query.term + i, text: s});
+        	        }
+        	        query.callback(data);
+        	    }
+        	});
+        	
+        	
+        	$('#supsell').on('select2:select', function (e) {
+        		alert("Selected value is: "+$("#supsel").select2("val"));
+        		$("#susel").select2("val", ["AL"]);
+        		alert("Selected value is: "+$("#supsel").select2("val"));
+        		 $("#susel").select2("data", {id: "Alabama", text: "Alabama"});
+        		 
+        		 alert("Selected value is: "+$("#susel").select2("val"));
+        		});
+        	
+        	     	        	
+        	
+        });
+    	
+		$(document).ready(function() { 
+               	$('#supsell').click(function(){
+                alert("qwe");
+            });
+        });
+		
+		
+		function getLastName(){
+			var params = 'info=' + 'getLastName';
+			var request = new XMLHttpRequest();
+			
+			request.onreadystatechange = function(){
+					if(request.readyState == 4 && request.status ==200){
+						
+						document.querySelector('#username').innerHTML = request.responseText;
+						request
+					}
+			}
+			
+			request.open('POST', 'SurnameFinder');
+			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			request.send(params);
+		}
+		
+		function getDepar(){
+			var params = 'info=' + 'getDepar';
+			var request = new XMLHttpRequest();
+			
+			request.onreadystatechange = function(){
+					if(request.readyState == 4 && request.status ==200){
+						document.querySelector('#depart').innerHTML = request.responseText;
+					}
+			}
+			
+			request.open('POST', 'SurnameFinder');
+			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			request.send(params);
+		}
+		
+	
+
+    </script>
+<body>
+
+	<form >
+	<div class = "titles" >
+		<font size="5" color="black" face="Arial">Информация о посещении</font>
+		</div>
+		    
+    			<div  class = "dateBeg">
+					Дата начала:
+				</div>
+				<div  class = "dateBegINP">
+					<br><input type = "date" name = "calendarStart"><br>
+				</div>	
+				
+				<div class = "dateFin">
+					Дата окончания:
+				</div>
+				<div class = "dateFinINP">
+					<input type = "date" name = "calendarFin">
+				</div>
+    
+				<div class = "username">
+					Введите фамилию работника:
+					</div>
+					
+					 <div class = "usernameINP">
+    					<select  id="username" size="5" >  </select>
+  					</div>
+  					
+  									
+				
+				<div class = "status" >
+					Введите статус: 
+				</div>
+				
+					<div class = "statusINP">
+    					<select  id="status" size="5"  multiple="multiple">  </select>
+  					</div>
+  					
+							
+				<div class = "depart" >
+					Введите отдел: 
+					</div>
+					
+					<div class = "departINP">
+    					<select  id="depart" size="5" >  </select>
+  					</div>
+				
+						
+				<div class =" but">
+					<input  type="button"  id= "but" value="Отправить" /> 
+				</div>
+				
+		<div class ="message">		
+			<font size="5" color="black" face="Arial">Оставить сообщение для работника </font>
+		</div>
+		
+			<div class = "surnMes" >
+				Введите фамилию: 
+			</div>
+				<div class = "surnMesINP">
+    				<select  id="surnMes" size="5" >  </select>
+  				</div>
+  				
+						
+			<div class = "typeMes" >
+				Выберете сообщение: 
+			</div>
+			   <div class = "typeMesINP">
+			   		<select size="1"  id="typeMes" >
+    					<option disabled selected>Выберите сообщение</option>
+    					<option value="Зайди в бухгалтерию">Зайди в бухгалтерию</option>
+    					<option value="Зайди к директору">Зайди к директору</option>
+    					<option value="Зайди к главному инженеру">Зайди к главному инженеру</option>
+    					<option value="Зайди в отдел кадров">Зайди в отдел кадров</option>
+   					</select>
+   				</div>
+   				
+   			<div class = "typeCom" >
+				Выберете способ оповещения: 
+			</div>
+			   <div class = "typeComINP">
+			   		<select size="1"  id="typeCom">
+    					<option disabled selected>Выберите способ оповещения</option>
+    					<option value="вход">При входе</option>
+    					<option value="выход/вход">При выходе и входе</option>
+   					</select>
+   				</div>
+   				
+   				
+ 		<div class ="sendMesBut">
+			<input  type="button"  id= "sendMesBut" value="Отправить" /> 
+		</div>
+		
+		<div class = "superselect">
+		<input type="hidden" id ="supsel" name="supsel">
+    <select id="supsell" size="5" >
+        <option value="Alabama">Alabama</option>
+        <option value="AL">Acabara</option>
+        <option value="AL">Arabarfa</option>
+        <option value="WY">Wyoming</option>
+    </select>
+    </div>
+    
+     <p>
+                 <input type="hidden" id="e5" style="width:300px"/>
+             </p>
+    
+    
+
+   
+	
+	</form>
+	
+	<div class = "table" id = "result"></div>
+	<div class = "confirm" id = "confirm"></div>
+	<script src="ajax.js"></script>
+
+
+</body>
+</html>
+

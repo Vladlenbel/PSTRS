@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+  <head>
+    <meta charset="utf-8">
+    <title>Select2 3.5.3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Select2 JQuery Plugin">
+    <meta name="author" content="Igor Vaynberg">
+
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="prettify/prettify.css" rel="stylesheet"/>
+    
+ 
+
+
+    <!--[if lt IE 9]>
+      <script src="js/html5shim.js"></script>
+    <![endif]-->
+
+      
+      <script src="js/jquery-1.7.1.min.js"></script>
+      <script src="js/jquery-ui-1.8.20.custom.min.js"></script> <!-- for sortable example -->
+      <script src="js/jquery.mousewheel.js"></script>
+      <script src="prettify/prettify.min.js"></script>
+      <script src="bootstrap/js/bootstrap.min.js"></script>
+
+
+
+        
+  </head>
+
+  <body>
+      <link href="select2-3.5.3/select2.css?ts=2015-08-29T20%3A09%3A48%2B00%3A00" rel="stylesheet"/>
+<script src="select2-3.5.3/select2.js?ts=2015-08-29T20%3A09%3A48%2B00%3A00"></script>
+
+
+
+
+<script id="script_e5">
+
+	
+	
+$(document).ready(function() {
+	$("#e5").select2({
+	    minimumInputLength: 1,
+	    placeholder: "Select report type",
+		  allowClear: true,
+		  
+	    query: function (query) {
+	        var data = {results: []}, i, j, s;
+	     
+	            data.results.push({id: query.term, text: query.term,});
+	            data.results.push ({id: 0, text: 'story'},{id: 1, text: 'bug'},{id: 2, text: 'task'});
+	        
+	        query.callback(data);
+	        
+	    }
+
+	});
+	
+	$('#e5').on('change', function (e) {
+		alert("Selected value is: "+$("#e5").select2("data").text);
+
+		});
+
+	});
+
+$('#e5').on('change', function (e) {
+	alert("Selected value is: "+$("#e5").select2("val"));
+
+	});
+
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+	
+
+	
+
+	$("#e6").select2({
+	    minimumInputLength: 1,
+	    placeholder: "Select report type e6",
+		  allowClear: true,
+		  
+	
+		  
+	    query: function (query) {
+	        var data = {results: []}, i, j, s;
+	     
+	            data.results.push({id: query.term, text: query.term,});
+	            data.results.push ({id: 0, text: 'story'},{id: 1, text: 'bug'},{id: 2, text: 'task'});
+	        
+	        query.callback(data);
+	        
+	    }
+
+	});
+	
+	$('#e6').on('change', function (e) {
+		alert("Selected value is: "+$("#e6").select2("data").text);
+		$("#e5").val("2").trigger('change');
+
+		});
+
+	});
+
+$('#e5').on('change', function (e) {
+	alert("Selected value is: "+$("#e5").select2("val"));
+
+	});
+
+</script>
+
+
+</style>
+       <article class="row" id="data">
+          <div class="span4">
+            
+               <input type="hidden" id="e5" style="width:300px"/>
+            
+            
+          </div>
+
+        </article>
+        
+          <article class="row" id="data">
+          <div class="span4">
+            
+             <p>
+                 <input type="hidden" id="e6" style="width:700px"/>
+             </p>
+            
+          </div>
+
+        </article>
+
+
+
+
+        
+  </body>
+</html>
